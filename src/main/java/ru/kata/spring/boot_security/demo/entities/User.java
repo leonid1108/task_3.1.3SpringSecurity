@@ -2,7 +2,7 @@ package ru.kata.spring.boot_security.demo.entities;
 
 import lombok.*;
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 // Аннотация @Data – это сокращенная аннотация,
 // сочетающая возможности @ToString, @EqualsAndHashCode, @Getter @Setter и @RequiredArgsConstructor.
@@ -30,7 +30,7 @@ public class User {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     public User() { }
 

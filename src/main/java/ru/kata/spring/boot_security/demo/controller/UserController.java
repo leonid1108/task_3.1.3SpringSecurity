@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public String userPage(Model model) {
+    public String showUserInfo(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         User user = userDetailService.findByUsername(username);
