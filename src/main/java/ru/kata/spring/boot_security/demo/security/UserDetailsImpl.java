@@ -1,13 +1,16 @@
 package ru.kata.spring.boot_security.demo.security;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.kata.spring.boot_security.demo.entities.User;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
+
     private User user;
 
     public UserDetailsImpl(User user) {
@@ -16,8 +19,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Роли теперь являются строками, просто создаем SimpleGrantedAuthority
         return user.getRoles().stream()
-                .map(role -> new GrantedAuthorityImpl(role.getName()))
+                .map(role -> new GrantedAuthorityImpl(role))
                 .collect(Collectors.toList());
     }
 

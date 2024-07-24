@@ -1,11 +1,10 @@
 package ru.kata.spring.boot_security.demo.entities;
 
-import lombok.*;
+import lombok.Data;
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
-// Аннотация @Data – это сокращенная аннотация,
-// сочетающая возможности @ToString, @EqualsAndHashCode, @Getter @Setter и @RequiredArgsConstructor.
 @Data
 @Entity
 @Table(name = "users")
@@ -26,18 +25,18 @@ public class User {
     @Column(name = "age")
     private int age;
 
-    @ManyToMany
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles = new HashSet<>();
 
     public User() { }
 
-    public User(String username, String password, String email, int age) {
+    public User(String username, String password, String email, int age, Set<String> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.age = age;
+        this.roles = roles;
     }
 }

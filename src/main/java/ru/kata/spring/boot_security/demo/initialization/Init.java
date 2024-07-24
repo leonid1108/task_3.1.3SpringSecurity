@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.dao.UserRepository;
 import ru.kata.spring.boot_security.demo.entities.User;
 
 import javax.annotation.PostConstruct;
+import java.util.Set;
 
 @Component
 public class Init {
@@ -20,12 +21,12 @@ public class Init {
     @PostConstruct
     public void postConstruct() {
         if (userRepository.findByUsername("admin") == null) {
-            User admin = new User("admin", "admin", "admin@mail.ru", 20);
+            User admin = new User("admin", "admin", "admin@mail.ru", 20, Set.of("ROLE_ADMIN"));
             userRepository.save(admin);
         }
 
         if (userRepository.findByUsername("user") == null) {
-            User user = new User("user", "user", "user@mail.ru", 22);
+            User user = new User("user", "user", "user@mail.ru", 22, Set.of("ROLE_USER"));
             userRepository.save(user);
         }
     }
