@@ -19,7 +19,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Роли теперь являются строками, просто создаем SimpleGrantedAuthority
         return user.getRoles().stream()
                 .map(role -> new GrantedAuthorityImpl(role))
                 .collect(Collectors.toList());
