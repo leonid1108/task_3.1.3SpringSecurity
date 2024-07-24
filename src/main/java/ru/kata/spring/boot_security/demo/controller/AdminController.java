@@ -7,26 +7,26 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 @Controller
 public class AdminController {
 
+	// --------Dependency Injection--------
 	private final UserService userService;
 
 	@Autowired
 	public AdminController(UserService userService) {
 		this.userService = userService;
 	}
+	// ------------------------------------
 
+	// Отображение таблицы User'ов
 	@GetMapping("/admin")
 	public String showAllUsers(Model model) {
 		model.addAttribute("users", userService.getAllUsers());
 		return "show";
 	}
 
+	//-----GET и POST методы для создания пользователя-----
 	@GetMapping("/admin/create")
 	public String createUser(Model model) {
 		model.addAttribute("user", new User());
@@ -34,12 +34,13 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/create")
-	public String createUser(@ModelAttribute("user") User user, @RequestParam("roles") String[] roles) {
-		user.setRoles(Set.of(roles));
+	public String createUser(@ModelAttribute("user") User user) {
 		userService.saveUser(user);
 		return "redirect:/admin";
 	}
+	// ----------------------------------------------------
 
+	//-----GET и POST методы для удаления пользователя-----
 	@GetMapping("/admin/delete")
 	public String deleteUser(@RequestParam("id") Long id, Model model) {
 		User user = userService.findById(id);
@@ -52,7 +53,9 @@ public class AdminController {
 		userService.deleteById(id);
 		return "redirect:/admin";
 	}
+	// ----------------------------------------------------
 
+	//-----GET и POST методы для редактирования пользователя-----
 	@GetMapping("/admin/edit")
 	public String editUser(@RequestParam("id") Long id, Model model) {
 		User user = userService.findById(id);
@@ -61,11 +64,11 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/edit")
-	public String editUser(@RequestParam("id") Long id, @ModelAttribute("user") User user, @RequestParam("roles") String[] roles) {
-		Set<String> roleSet = new HashSet<>(Arrays.asList(roles)); // Ensure this is mutable
-		user.setRoles(roleSet);
-		userService.editUser(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getAge(), user.getRoles());
+	public String editUser(@RequestParam("id") Long id, @ModelAttribute("user") User user) {
+		if (user != null && user.getId() != null) {
+            userService.editUser(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getAge(), user.getRoles());
+		}
 		return "redirect:/admin";
 	}
-
+	// -----------------------------------------------------------
 }
